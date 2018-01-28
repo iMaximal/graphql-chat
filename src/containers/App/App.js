@@ -21,7 +21,7 @@ class App extends Component {
     // Get username form prompt
     // when page loads
     const from = window.prompt('username');
-    from && this.setState({from});
+    from && this.setState( { from });
   }
 
   render() {
@@ -32,8 +32,17 @@ class App extends Component {
         <div className="container">
           <h2>Chats</h2>
           {allChats.map(message => (
-            <Chatbox key={message.id} message={message}/>
+            <Chatbox key={message.id} message={message} />
           ))}
+
+          {/* Message content input */}
+          <input
+            value={this.state.content}
+            onChange={e => this.setState({ content: e.target.value })}
+            type="text"
+            placeholder="Start typing"
+            onKeyPress={this._createChat}
+          />
         </div>
       </div>
     );
@@ -43,10 +52,10 @@ class App extends Component {
 const ALL_CHATS_QUERY = gql`
     query AllChatsQuery {
         allChats {
-            id
-            createdAt
-            from
-            content
+          id
+          createdAt
+          from
+          content
         }
     }
 `;
@@ -54,10 +63,10 @@ const ALL_CHATS_QUERY = gql`
 const CREATE_CHAT_MUTATION = gql`
     mutation CreateChatMutation($content: String!, $from: String!) {
         createChat(content: $content, from: $from) {
-            id
-            createdAt
-            from
-            content
+          id
+          createdAt
+          from
+          content
         }
     }
 `;
