@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import './chatbox.css'
 
 const Chatbox = ({message}) => (
@@ -10,5 +10,6 @@ const Chatbox = ({message}) => (
       </p>
     </div>
   </div>
-);
-export default Chatbox;
+)
+
+export default Chatbox

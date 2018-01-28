@@ -1,4 +1,4 @@
-import React, { Component   } from 'react';
+import React, { Component } from 'react';
 
 // Import GraphQL helpers
 import { graphql, compose } from 'react-apollo';
@@ -22,13 +22,57 @@ class App extends Component {
     // when page loads
     const from = window.prompt('username');
     from && this.setState( { from });
+    this.subscribeToNewChats();
   }
+
+  inputHandler = (event) => {
+    this.setState({
+      content: event.target.value
+    });
+  }
+
+  subscribeToNewChats = () => {
+    this.props.allChatsQuery.subscribeToMore({
+      document: gql`
+          subscription {
+              Chat(filter: { mutation_in: [CREATED] }) {
+                  node {
+                      id
+                      from
+                      content
+                      createdAt
+                  }
+              }
+          }
+      `,
+      updateQuery: (previous, { subscriptionData }) => {
+        const newChatLinks = [
+          ...previous.allChats,
+          subscriptionData.data.Chat.node
+        ];
+        const result = {
+          ...previous,
+          allChats: newChatLinks
+        };
+        return result;
+      }
+    });
+  };
+
+  createChat = async e => {
+    if (e.key === 'Enter') {
+      const { content, from } = this.state;
+      await this.props.createChatMutation({
+        variables: { content, from }
+      });
+      this.setState({ content: '' });
+    }
+  };
 
   render() {
     const allChats = this.props.allChatsQuery.allChats || [];
 
     return (
-      <div className="">
         <div className="container">
           <h2>Chats</h2>
           {allChats.map(message => (
@@ -38,13 +82,12 @@ class App extends Component {
           {/* Message content input */}
           <input
             value={this.state.content}
-            onChange={e => this.setState({ content: e.target.value })}
+            onChange={this.inputHandler}
             type="text"
             placeholder="Start typing"
-            onKeyPress={this._createChat}
+            onKeyPress={this.createChat}
           />
         </div>
-      </div>
     );
   }
 }
