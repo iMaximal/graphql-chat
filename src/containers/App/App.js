@@ -50,10 +50,12 @@ class App extends Component {
           ...previous.allChats,
           subscriptionData.data.Chat.node
         ];
+
         const result = {
           ...previous,
           allChats: newChatLinks
         };
+
         return result;
       }
     });
@@ -62,9 +64,11 @@ class App extends Component {
   createChat = async e => {
     if (e.key === 'Enter') {
       const { content, from } = this.state;
+
       await this.props.createChatMutation({
         variables: { content, from }
       });
+
       this.setState({ content: '' });
     }
   };
@@ -75,6 +79,7 @@ class App extends Component {
     return (
         <div className="container">
           <h2>Chats</h2>
+
           {allChats.map(message => (
             <Chatbox key={message.id} message={message} />
           ))}

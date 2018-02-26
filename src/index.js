@@ -12,7 +12,6 @@ import './index.css'
 import App from './containers/App/App'
 
 const wsLink = new WebSocketLink({
-
   uri: 'wss://subscriptions.graph.cool/v1/cjcz23o120dz20153qofzqgmf',
   options: {
     reconnect: true
@@ -33,8 +32,8 @@ const link = split(
   wsLink,
   httpLink,
 )
-const client = new ApolloClient({
 
+const client = new ApolloClient({
   link,
   cache: new InMemoryCache()
 })
